@@ -73,7 +73,7 @@ def load_data():
 df_pangan, df_akg = load_data()
 
 # ── Sidebar ───────────────────────────────────────────────────
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Indonesia.svg/200px-Coat_of_arms_of_Indonesia.svg.png", width=80)
+st.sidebar.markdown("## 🥗")
 st.sidebar.title("🥗 Smart Nutrition Tracker")
 st.sidebar.markdown("**Golden Age Children (0-6 Tahun)**")
 st.sidebar.markdown("---")
