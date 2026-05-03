@@ -156,7 +156,9 @@ elif menu == "📊 Analisis Nutrisi":
         Minyak/Lemak dengan nilai 818-902 Kal per 100 gram. Meskipun tinggi energi, 
         kelompok ini tidak direkomendasikan sebagai sumber energi utama anak karena minim nutrisi esensial lainnya.
         """)
-        st.dataframe(top_energi.reset_index(drop=True))
+        top_energi = top_energi.reset_index(drop=True)
+        top_energi.index += 1
+        st.dataframe(top_energi)
 
     with tab2:
         st.subheader("BQ 2: Rata-rata Protein per Kelompok Makanan")
@@ -175,7 +177,10 @@ elif menu == "📊 Analisis Nutrisi":
         diikuti Daging (19.12 g) dan Kacang-Kacangan (16.22 g). Sumber protein hewani 
         secara umum lebih tinggi dibandingkan sumber nabati.
         """)
-        st.dataframe(avg_protein.reset_index(drop=True))
+        
+        avg_protein = avg_protein.reset_index(drop=True)
+        avg_protein.index += 1
+        st.dataframe(avg_protein)
 
 # ══════════════════════════════════════════════════════════════
 # PAGE 3 — CARI MAKANAN
@@ -199,7 +204,9 @@ elif menu == "🔍 Cari Makanan":
     st.markdown(f"**Ditemukan {len(df_filtered)} bahan makanan**")
 
     cols_tampil = ['nama', 'kategori', 'tipe', 'energi_kal', 'protein_g', 'lemak_g', 'karbo_g', 'kalsium_mg', 'besi_mg', 'vit_c_mg']
-    st.dataframe(df_filtered[cols_tampil].reset_index(drop=True), use_container_width=True)
+    df_tampil = df_filtered[cols_tampil].reset_index(drop=True)
+    df_tampil.index += 1
+    st.dataframe(df_tampil, use_container_width=True)
 
     # Detail per makanan
     if len(df_filtered) > 0:
@@ -272,7 +279,9 @@ elif menu == "📋 Perbandingan AKG":
         terutama dari sisi protein, namun pemenuhan karbohidrat masih sangat rendah 
         sehingga perlu dikombinasikan dengan sumber karbohidrat lain.
         """)
-        st.dataframe(top10.reset_index(drop=True))
+        top10 = top10.reset_index(drop=True)
+        top10.index += 1
+        st.dataframe(top10)
 
     with tab2:
         st.subheader("BQ 4: Persentase Nutrisi yang Tidak Terpenuhi vs AKG")
@@ -312,7 +321,9 @@ elif menu == "📋 Perbandingan AKG":
         **Insight:** Hampir seluruh bahan makanan tidak dapat memenuhi kebutuhan AKG 
         secara individual, menegaskan pentingnya variasi dan kombinasi menu harian anak.
         """)
-        st.dataframe(df_gap.reset_index(drop=True))
+        df_gap = df_gap.reset_index(drop=True)
+        df_gap.index += 1
+        st.dataframe(df_gap)
 
 # ══════════════════════════════════════════════════════════════
 # PAGE 5 — REKOMENDASI MENU
@@ -360,7 +371,9 @@ elif menu == "🏆 Rekomendasi Menu":
     st.subheader("📊 Detail Nutrisi Rekomendasi")
     if len(nutrisi_pilih) > 0:
         cols_detail = ['nama', 'kategori'] + ['energi_kal', 'protein_g', 'kalsium_mg', 'besi_mg', 'vit_c_mg', 'serat_g']
-        st.dataframe(df_pangan.loc[top_rek.index, cols_detail].reset_index(drop=True), use_container_width=True)
+        df_detail = df_pangan.loc[top_rek.index, cols_detail].reset_index(drop=True)
+        df_detail.index += 1
+        st.dataframe(df_detail, use_container_width=True)
 
     st.markdown("""
     **Insight:** Kombinasi bahan makanan dari kelompok Ikan/Kerang/Udang, Kacang-Kacangan, 
