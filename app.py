@@ -128,7 +128,8 @@ if menu == "🏠 Beranda":
     ]
     for i, bq in enumerate(bqs, 1):
         st.markdown(f"**BQ {i}:** {bq}")
-        st.markdown("---")
+
+    st.markdown("---")
     st.subheader("📖 Data Dictionary")
     data_dict = {
         'Kolom': ['kode','nama','kategori','tipe','air_g','energi_kal','protein_g','lemak_g','karbo_g','serat_g','abu_g','kalsium_mg','fosfor_mg','besi_mg','natrium_mg','kalium_mg','tembaga_mg','seng_mg','retinol_mcg','b_kar_mcg','kar_total_mcg','thiamin_mg','riboflavin_mg','niasin_mg','vit_c_mg'],
@@ -159,7 +160,7 @@ if menu == "🏠 Beranda":
             'Kandungan thiamin (Vitamin B1) per 100 gram',
             'Kandungan riboflavin (Vitamin B2) per 100 gram',
             'Kandungan niasin per 100 gram',
-            'Kandungan vitamin C per 100 gram'
+            'Kandungan vitamin C per 100 gram'    
         ]
     }
     df_dict = pd.DataFrame(data_dict)
