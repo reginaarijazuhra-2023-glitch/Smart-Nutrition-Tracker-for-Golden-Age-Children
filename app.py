@@ -16,58 +16,8 @@ st.set_page_config(
 # ── Load Data ─────────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    df_pangan = pd.read_csv('panganku_dataset.csv')
+    df_pangan = pd.read_csv('final_dataset.csv')
     df_akg = pd.read_csv('akg_anak.csv')
-
-    # Cleaning
-    def clean_nilai(val):
-        if pd.isna(val):
-            return np.nan
-        val = str(val).replace(':', '').replace('Â', '').strip()
-        match = re.search(r'[\d.]+', val)
-        return float(match.group()) if match else np.nan
-
-    nutrisi_cols = [
-        'Air (Water)', 'Energi (Energy)', 'Protein (Protein)', 'Lemak (Fat)',
-        'Karbohidrat (CHO)', 'Serat (Fibre)', 'Abu (ASH)', 'Kalsium (Ca)',
-        'Fosfor (P)', 'Besi (Fe)', 'Natrium (Na)', 'Kalium (K)', 'Tembaga (Cu)',
-        'Seng (Zn)', 'Retinol (Vit. A)', 'Beta-Karoten (Carotenes)',
-        'Karoten Total (Re)', 'Thiamin (Vit. B1)', 'Riboflavin (Vit. B2)',
-        'Niasin (Niacin)', 'Vitamin C (Vit. C)'
-    ]
-
-    for col in nutrisi_cols:
-        if col in df_pangan.columns:
-            df_pangan[col] = df_pangan[col].apply(clean_nilai)
-
-    if 'kode' in df_pangan.columns:
-        df_pangan = df_pangan.drop(columns=['kode'])
-
-    df_pangan = df_pangan.rename(columns={
-        'Kode': 'kode', 'Nama': 'nama', 'Nama Latin': 'nama_latin',
-        'Asal': 'asal', 'Kategori': 'kategori', 'Tipe Bahan': 'tipe',
-        'Keterangan': 'keterangan', 'Air (Water)': 'air_g',
-        'Energi (Energy)': 'energi_kal', 'Protein (Protein)': 'protein_g',
-        'Lemak (Fat)': 'lemak_g', 'Karbohidrat (CHO)': 'karbo_g',
-        'Serat (Fibre)': 'serat_g', 'Abu (ASH)': 'abu_g',
-        'Kalsium (Ca)': 'kalsium_mg', 'Fosfor (P)': 'fosfor_mg',
-        'Besi (Fe)': 'besi_mg', 'Natrium (Na)': 'natrium_mg',
-        'Kalium (K)': 'kalium_mg', 'Tembaga (Cu)': 'tembaga_mg',
-        'Seng (Zn)': 'seng_mg', 'Retinol (Vit. A)': 'retinol_mcg',
-        'Beta-Karoten (Carotenes)': 'b_kar_mcg', 'Karoten Total (Re)': 'kar_total_mcg',
-        'Thiamin (Vit. B1)': 'thiamin_mg', 'Riboflavin (Vit. B2)': 'riboflavin_mg',
-        'Niasin (Niacin)': 'niasin_mg', 'Vitamin C (Vit. C)': 'vit_c_mg'
-    })
-
-    nutrisi_cols_clean = [
-        'air_g', 'energi_kal', 'protein_g', 'lemak_g', 'karbo_g', 'serat_g',
-        'kalsium_mg', 'fosfor_mg', 'besi_mg', 'natrium_mg', 'kalium_mg',
-        'seng_mg', 'retinol_mcg', 'thiamin_mg', 'riboflavin_mg', 'niasin_mg', 'vit_c_mg'
-    ]
-    for col in nutrisi_cols_clean:
-        if col in df_pangan.columns:
-            df_pangan[col] = df_pangan[col].fillna(df_pangan[col].median())
-
     return df_pangan, df_akg
 
 df_pangan, df_akg = load_data()
@@ -132,9 +82,9 @@ if menu == "🏠 Beranda":
     st.markdown("---")
     st.subheader("📖 Data Dictionary")
     data_dict = {
-        'Kolom': ['kode','nama','kategori','tipe','air_g','energi_kal','protein_g','lemak_g','karbo_g','serat_g','abu_g','kalsium_mg','fosfor_mg','besi_mg','natrium_mg','kalium_mg','tembaga_mg','seng_mg','retinol_mcg','b_kar_mcg','kar_total_mcg','thiamin_mg','riboflavin_mg','niasin_mg','vit_c_mg'],
-        'Tipe Data': ['object','object','object','object','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64'],
-        'Satuan': ['-','-','-','-','gram','Kalori','gram','gram','gram','gram','gram','miligram','miligram','miligram','miligram','miligram','miligram','miligram','mikrogram','mikrogram','mikrogram','miligram','miligram','miligram','miligram'],
+        'Kolom': ['kode','nama','kategori','tipe','air_g','energi_kal','protein_g','lemak_g','karbo_g','serat_g','abu_g','kalsium_mg','fosfor_mg','besi_mg','natrium_mg','kalium_mg','tembaga_mg','seng_mg','retinol_mcg','b_kar_mcg','kar_total_mcg','thiamin_mg','riboflavin_mg','niasin_mg','vit_c_mg','status_energi','status_protein','status_kalsium','status_besi','skor_gizi_anak'],
+        'Tipe Data': ['object','object','object','object','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','float64','object','object','object','object','float64'],
+        'Satuan': ['-','-','-','-','gram','Kalori','gram','gram','gram','gram','gram','miligram','miligram','miligram','miligram','miligram','miligram','miligram','mikrogram','mikrogram','mikrogram','miligram','miligram','miligram','miligram','-','-','-','-','0-1'],
         'Deskripsi': [
             'Kode unik bahan makanan berdasarkan TKPI',
             'Nama bahan makanan dalam Bahasa Indonesia',
@@ -160,7 +110,12 @@ if menu == "🏠 Beranda":
             'Kandungan thiamin (Vitamin B1) per 100 gram',
             'Kandungan riboflavin (Vitamin B2) per 100 gram',
             'Kandungan niasin per 100 gram',
-            'Kandungan vitamin C per 100 gram'    
+            'Kandungan vitamin C per 100 gram',
+            'Status kecukupan energi vs AKG rata-rata anak (Kurang/Cukup/Lebih)',
+            'Status kecukupan protein vs AKG rata-rata anak (Kurang/Cukup/Lebih)',
+            'Status kecukupan kalsium vs AKG rata-rata anak (Kurang/Cukup/Lebih)',
+            'Status kecukupan zat besi vs AKG rata-rata anak (Kurang/Cukup/Lebih)',
+            'Skor gabungan normalisasi energi, protein, kalsium, dan zat besi (0=terendah, 1=tertinggi)'
         ]
     }
     df_dict = pd.DataFrame(data_dict)
