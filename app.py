@@ -315,8 +315,8 @@ elif menu == "📋 Perbandingan AKG":
 
         st.markdown("""
         **Insight:** Energi dan karbohidrat menjadi nutrisi yang paling sulit terpenuhi 
-        (100%), diikuti lemak (96.77%), kalsium (93.89%), zat besi (87.17%), protein 
-        (83.94%), dan vitamin C (69.46%). Hal ini menegaskan pentingnya variasi dan 
+        (100%), diikuti kalsium (97.38%), lemak (96.86%), vitamin C (94.68%), zat besi 
+        (90.92%), dan protein (84.03%). Hal ini menegaskan pentingnya variasi dan 
         kombinasi menu harian anak golden age.
         """)
         df_gap = df_gap.reset_index(drop=True)
