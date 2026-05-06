@@ -32,7 +32,8 @@ menu = st.sidebar.radio("Navigasi", [
     "📊 Analisis Nutrisi",
     "🔍 Cari Makanan",
     "📋 Perbandingan AKG",
-    "🏆 Rekomendasi Menu"
+    "🏆 Rekomendasi Menu",
+    "🧪 A/B Testing Metode Scoring"
 ])
 
 st.sidebar.markdown("---")
@@ -137,7 +138,7 @@ elif menu == "📊 Analisis Nutrisi":
         top_energi = df_pangan.nlargest(top_n, 'energi_kal')[['nama', 'kategori', 'energi_kal']]
 
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.barplot(data=top_energi, x='energi_kal', y='nama', palette='Oranges_r', ax=ax)
+        sns.barplot(data=top_energi, x='energi_kal', y='nama', hue='nama', palette='Oranges_r', legend=False, ax=ax)
         ax.set_title(f'Top {top_n} Bahan Makanan dengan Energi Tertinggi per 100 gram')
         ax.set_xlabel('Energi (Kal)')
         ax.set_ylabel('Nama Bahan Makanan')
@@ -158,7 +159,7 @@ elif menu == "📊 Analisis Nutrisi":
         avg_protein = df_pangan.groupby('kategori')['protein_g'].mean().sort_values(ascending=False).reset_index()
 
         fig2, ax2 = plt.subplots(figsize=(10, 6))
-        sns.barplot(data=avg_protein, x='protein_g', y='kategori', palette='Blues_r', ax=ax2)
+        sns.barplot(data=avg_protein, x='protein_g', y='kategori', hue='kategori', palette='Blues_r', legend=False, ax=ax2)
         ax2.set_title('Rata-rata Kandungan Protein per Kelompok Makanan')
         ax2.set_xlabel('Rata-rata Protein (g per 100 gram)')
         ax2.set_ylabel('Kelompok Makanan')
@@ -260,7 +261,7 @@ elif menu == "📋 Perbandingan AKG":
         top10 = df_pangan.nlargest(10, 'skor_pemenuhan')[['nama', 'kategori', 'skor_pemenuhan', 'pct_energi', 'pct_protein', 'pct_karbo']]
 
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.barplot(data=top10, x='skor_pemenuhan', y='nama', palette='Greens_r', ax=ax)
+        sns.barplot(data=top10, x='skor_pemenuhan', y='nama', hue='nama', palette='Greens_r', legend=False, ax=ax)
         ax.set_title(f'Top 10 Pemenuhan AKG per 100 gram\n(Kelompok Umur: {umur_pilih})')
         ax.set_xlabel('Rata-rata % Pemenuhan AKG')
         ax.set_ylabel('Nama Bahan Makanan')
@@ -269,8 +270,10 @@ elif menu == "📋 Perbandingan AKG":
 
         st.markdown("""
         **Insight:** Kelompok Ikan/Kerang/Udang mendominasi pemenuhan AKG tertinggi 
-        terutama dari sisi protein, namun pemenuhan karbohidrat masih sangat rendah 
-        sehingga perlu dikombinasikan dengan sumber karbohidrat lain.
+        per 100 gram dengan Dendeng mujahir goreng sebagai yang terbaik (skor 153.67%). 
+        Pemenuhan protein jauh melampaui AKG namun pemenuhan karbohidrat masih sangat 
+        rendah sehingga perlu dikombinasikan dengan sumber karbohidrat seperti nasi, 
+        umbi, atau serealia.
         """)
         top10 = top10.reset_index(drop=True)
         top10.index += 1
@@ -303,7 +306,7 @@ elif menu == "📋 Perbandingan AKG":
         df_gap = df_gap.sort_values('pct_tidak_terpenuhi', ascending=False)
 
         fig2, ax2 = plt.subplots(figsize=(10, 6))
-        sns.barplot(data=df_gap, x='pct_tidak_terpenuhi', y='nutrisi', palette='Reds_r', ax=ax2)
+        sns.barplot(data=df_gap, x='pct_tidak_terpenuhi', y='nutrisi', hue='nutrisi', palette='Reds_r', legend=False, ax=ax2)
         ax2.set_title(f'% Bahan Makanan di Bawah Threshold AKG\n(Kelompok Umur: {umur_pilih2})')
         ax2.set_xlabel('% Bahan Makanan di Bawah Threshold AKG')
         ax2.set_ylabel('Nutrisi')
@@ -311,8 +314,10 @@ elif menu == "📋 Perbandingan AKG":
         st.pyplot(fig2)
 
         st.markdown("""
-        **Insight:** Hampir seluruh bahan makanan tidak dapat memenuhi kebutuhan AKG 
-        secara individual, menegaskan pentingnya variasi dan kombinasi menu harian anak.
+        **Insight:** Energi dan karbohidrat menjadi nutrisi yang paling sulit terpenuhi 
+        (100%), diikuti lemak (96.77%), kalsium (93.89%), zat besi (87.17%), protein 
+        (83.94%), dan vitamin C (69.46%). Hal ini menegaskan pentingnya variasi dan 
+        kombinasi menu harian anak golden age.
         """)
         df_gap = df_gap.reset_index(drop=True)
         df_gap.index += 1
@@ -351,7 +356,7 @@ elif menu == "🏆 Rekomendasi Menu":
             top_rek_nama = df_pangan.loc[top_rek.index, 'nama']
 
             fig, ax = plt.subplots(figsize=(10, max(4, top_n * 0.6)))
-            sns.barplot(x=top_rek['skor_rekomendasi'].values, y=top_rek_nama.values, palette='viridis', ax=ax)
+            sns.barplot(x=top_rek['skor_rekomendasi'].values, y=top_rek_nama.values, hue=top_rek_nama.values, palette='viridis', legend=False, ax=ax)
             ax.set_title(f'Top {top_n} Rekomendasi Bahan Makanan')
             ax.set_xlabel('Skor Normalisasi (0-1)')
             ax.set_ylabel('Nama Bahan Makanan')
@@ -372,4 +377,58 @@ elif menu == "🏆 Rekomendasi Menu":
     **Insight:** Kombinasi bahan makanan dari kelompok Ikan/Kerang/Udang, Kacang-Kacangan, 
     dan Susu dapat menjadi dasar penyusunan menu harian anak yang kaya protein, kalsium, 
     dan zat besi untuk mendukung tumbuh kembang optimal pada periode golden age.
+    """)
+
+# ══════════════════════════════════════════════════════════════
+# PAGE 6 — A/B TESTING
+# ══════════════════════════════════════════════════════════════
+elif menu == "🧪 A/B Testing Metode Scoring":
+    st.title("🧪 A/B Testing: Perbandingan Metode Scoring")
+    st.markdown("---")
+    st.markdown("""
+    Halaman ini membandingkan dua pendekatan scoring dalam menghasilkan 
+    rekomendasi bahan makanan terbaik untuk anak usia 0-6 tahun.
+    
+    - **Metode A (Equal Weight):** Semua nutrisi diberi bobot sama (25% masing-masing)
+    - **Metode B (AKG-Weighted):** Energi dan kalsium diberi bobot lebih tinggi (35%) 
+      karena keduanya paling banyak tidak terpenuhi berdasarkan analisis BQ 4
+    """)
+
+    cols_ab = ['energi_kal', 'protein_g', 'kalsium_mg', 'besi_mg']
+    scaler_ab = MinMaxScaler()
+    df_ab = df_pangan.copy()
+    df_ab[cols_ab] = scaler_ab.fit_transform(df_pangan[cols_ab])
+
+    df_ab['skor_A'] = df_ab[cols_ab].mean(axis=1)
+
+    bobot_B = {'energi_kal': 0.35, 'protein_g': 0.15, 'kalsium_mg': 0.35, 'besi_mg': 0.15}
+    df_ab['skor_B'] = sum(df_ab[col] * w for col, w in bobot_B.items())
+
+    top_n_ab = st.slider("Jumlah rekomendasi:", 3, 10, 5)
+
+    top_A = df_pangan.loc[df_ab.nlargest(top_n_ab, 'skor_A').index, 'nama'].values
+    top_B = df_pangan.loc[df_ab.nlargest(top_n_ab, 'skor_B').index, 'nama'].values
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Metode A — Equal Weight")
+        for i, nama in enumerate(top_A, 1):
+            st.markdown(f"**{i}.** {nama}")
+
+    with col2:
+        st.subheader("Metode B — AKG-Weighted")
+        for i, nama in enumerate(top_B, 1):
+            st.markdown(f"**{i}.** {nama}")
+
+    overlap = set(top_A) & set(top_B)
+    st.markdown("---")
+    st.metric("Bahan Makanan Overlap (muncul di kedua metode)", len(overlap))
+    if overlap:
+        st.success(f"Overlap: {', '.join(overlap)}")
+
+    st.markdown("""
+    **Insight:** Bahan makanan yang muncul di kedua metode merupakan pilihan paling 
+    robust karena unggul secara konsisten di semua kombinasi bobot nutrisi. 
+    Sistem Smart Nutrition Tracker menggunakan **Metode B** sebagai default karena 
+    lebih merepresentasikan kondisi nyata kekurangan gizi anak Indonesia.
     """)
